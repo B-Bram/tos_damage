@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ja-JP">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta charset="UTF-8">
+
+<meta property="og:title" content="">
+<meta property="og:type" content="">
+<meta property="og:image" content="">
+<meta property="og:url" content="">
+<meta property="og:site_name" content="">
+<meta property="og:description" content="">
+<link rel="canonical" href="">
+
+<title>ToS Damager.</title>
+
+<link rel="stylesheet" type="text/css" href="./assets/styles/styles.css">
+
+</head>
+<body>  
+モンスター：en_<br>
+物理：ph_<br>
+魔法：ma_<br><br>
+  
+レベル：level<br><br>
+  
+攻撃：attack<br>
+防御：deffense<br>
+クリティカル：critical<br><br>
+  
+属性：attribute<br>
+種族：tribe<br><br>
+  
+スキル：skill<br>
+キャラクター：character<br>
+特性：property<br><br>
+  
+魔法増幅：amplify<br>
+固定：fix<br><br>
+  
+  
+  
+・実装してない<br>
+T0?/T1?/防御デバフ/属性抵抗/属性相性/タイプ相性<br>
+・実装時注意<br>
+レベル補正<br><br>
+  
+<div id="">
+  <p id="totalScore">Total Score</p>
+</div>
+  
+<div id="calculatorType">
+  <label><input type="radio" name="cal_type" value="easy"> 簡易計算機</label><br>
+  <label><input type="radio" name="cal_type" value="detail"> 詳細計算機</label><br>
+</div>
+
+<div id="">
+  <h2>敵情報</h2>
+  <input type="text" id="en_level" class="" placeholder="モンスターレベル">
+  <input type="text" id="en_deffense" class="" placeholder="モンスター防御力">
+</div>
+  
+<div id="">
+  <h2>キャラクター情報</h2>
+  <input type="text" id="character_level" class="" placeholder="キャラクターレベル">
+  <input type="text" id="skill_power" class="" placeholder="スキル威力">
+  <input type="text" id="character_attack" class="" placeholder="キャラクター攻撃力">
+  <input type="text" id="attribute_attack" class="" placeholder="属性攻撃力">
+  <input type="text" id="tribe_attack" class="" placeholder="種族ダメージ">
+  <input type="text" id="property_attack" class="" placeholder="特性">
+  <input type="text" id="fix_attack" class="" placeholder="固定追加ダメージ">
+</div>
+  
+  
+<div id="">
+  <h2>物理職用オプション</h2>
+  <input type="text" id="ph_critical_attack" class="" placeholder="クリティカル攻撃力">
+</div>
+  
+<div id="">
+  <h2>魔法職用オプション</h2>
+  <input type="text" id="ma_amplify" class="" placeholder="魔法増幅">
+</div>
+  
+<div id="">
+  <button id="calculatorButton">計算する</button>
+</div>
+
+  
+<blockquote>
+(
+(((スキル威力+攻撃力)+(ランダム0%～100%×魔法増幅) )×(100%+T0))
+－
+(((防御力-防御力デバフ)×(100%+レベル補正)+(属性抵抗)))
+*
+(100%+0% or 50%(クリティカル時))
+＋
+(クリティカル攻撃力(クリティカル時))+(追加属性攻撃)+(追加種族ダメージ))
+×
+(100%+T1)×(100%+属性相性)×(100%+タイプ相性)×(100%+スキル強化特性)
+＋
+固定追加ダメージ
+</blockquote>
+  
+<blockquote>
+クリティカルじゃない場合<br>
+(攻撃力 + スキル威力) - 防御力 = 基本ダメージ<br>
+基本ダメージ x 各種倍率 = 最終ダメージ<br><br>
+クリティカルの場合<br>
+(攻撃力 + スキル威力) - 防御力 = 基本ダメージ<br>
+(基本ダメージ x 1.5 + クリティカル攻撃力) x 各種倍率 = 最終ダメージ
+</blockquote>
+  
+  
+・攻撃力<br>
+40	60	90	130	180	240	310	390	480	580<br>
+・クリティカル攻撃力<br>
+60	90	140	200	270	360	470	590	720	870<br><br>
+  
+・レベル補正<br>
+4	0%<br>
+5	10%<br>
+6	20%<br>
+7	30%<br>
+8	40%<br>
+9	50%<br>
+10	60%<br>
+11	70%<br>
+12	80%<br>
+13	90%<br>
+14	100%
+
+
+<script src="./assets/scripts/third.js"></script>
+<script src="./assets/scripts/scripts.js"></script>
+</body>
+</html>
