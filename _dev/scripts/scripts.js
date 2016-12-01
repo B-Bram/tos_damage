@@ -45,31 +45,73 @@ $(function(){
     return parseInt(val,10);
   }
 
-  // 計算ロジック
-  function damageCalculator() {
-    var _damage = 0;
-    
-    var enLevelVal = returnInt(_values.en_level.jDom.val());
-    var enDeffenseVal = returnInt(_values.en_deffense.jDom.val());
-    var characterLevelVal = returnInt(_values.character_level.jDom.val());
-    var skillPowerVal = returnInt(_values.skill_power.jDom.val());
-    var characterAttackVal = returnInt(_values.character_attack.jDom.val());
-    var attributeAttackVal = returnInt(_values.attribute_attack.jDom.val());
-    var tribeAttackVal = returnInt(_values.tribe_attack.jDom.val());
-    var propertyAttackVal = returnInt(_values.property_attack.jDom.val());
-    var fixAttackVal = returnInt(_values.fix_attack.jDom.val());
-    var phCriticalAttackVal = returnInt(_values.ph_critical_attack.jDom.val());
-    var maAmplifyVal = returnInt(_values.ma_amplify.jDom.val());
-    
+  /* 
+   * 計算ロジック郡
+  */
+  
+  // レベル差補正
+  function levelRevise() {
     var levelRevise = 0;
     
-    var baseDamage = (skillPowerVal + characterAttackVal + 0 ) - (enDeffenseVal*levelRevise); //(100%+T0),属性抵抗 必要
-    var criticalDamage = phCriticalAttackVal; // 追加属性攻撃,追加種族ダメージ　必要
-    var specialAttack = 1 + (propertyAttackVal/100); // (100%+T1),(100%+属性相性),(100%+タイプ相性) 必要
+    var enLevelVal = returnInt(_values.en_level.jDom.val());
+    var characterLevelVal = returnInt(_values.character_level.jDom.val());
     
-    _damage = ((baseDamage * criticalDamage) * specialAttack) + returnInt(fixAttackVal);
+    return levelRevise;
+  }
+  
+  // 基本ダメージ
+  function baseDamage() {
+    var _baseDamage = 0;
     
-    return _damage;
+    var skillPowerVal = returnInt(_values.skill_power.jDom.val());
+    var characterAttackVal = returnInt(_values.character_attack.jDom.val());
+    var enDeffenseVal = returnInt(_values.en_deffense.jDom.val());
+    
+    _baseDamage = (skillPowerVal + characterAttackVal + 0 ) - (enDeffenseVal*levelRevise()); //(100%+T0),属性抵抗 必要
+    return _baseDamage;
+  }
+  
+  // クリティカルダメージ
+  function criticalDamage(criticalFlag) {
+    var _criticalDamage = 0;
+    var phCriticalAttackVal = returnInt(_values.ph_critical_attack.jDom.val());
+    var attributeAttackVal = returnInt(_values.attribute_attack.jDom.val());
+    
+    // 追加属性攻撃,追加種族ダメージ　必要
+    if ( criticalFlag ) {
+      _criticalDamage = phCriticalAttackVal + attributeAttackVal;
+    } else {
+      _criticalDamage = attributeAttackVal;
+    }
+    
+    return _criticalDamage;
+  }
+  
+  // 特別な攻撃力加算
+  function specialAttack() {
+    var propertyAttackVal = returnInt(_values.property_attack.jDom.val());
+    var _scperialDamage = 1 + (propertyAttackVal/100); // (100%+T1),(100%+属性相性),(100%+タイプ相性) 必要;
+    
+    return _scperialDamage;
+  }
+  
+  // 通常ダメージ計算ロジック
+  function damageCalculator(criticalFlag) {
+    var _damage = 0;
+    
+    var tribeAttackVal = returnInt(_values.tribe_attack.jDom.val());
+    
+    var fixAttackVal = returnInt(_values.fix_attack.jDom.val());
+    
+    var maAmplifyVal = returnInt(_values.ma_amplify.jDom.val());
+    
+    if ( criticalFlag ) {
+      _damage = ((baseDamage() * 1.5 + criticalDamage(criticalFlag)) * specialAttack()) + returnInt(fixAttackVal);
+    } else {
+      _damage = ((baseDamage() + criticalDamage(criticalFlag)) * specialAttack()) + returnInt(fixAttackVal);  
+    }
+    
+    return Math.round(_damage);
   }
 
   // 入力値に問題がないか確認する
@@ -81,17 +123,17 @@ $(function(){
   function defaultValueSet() {
     defaultValueValidation();
     
-    var $enLevelVal = returnInt(_values.en_level.jDom);
-    var $enDeffenseVal = returnInt(_values.en_deffense.jDom);
-    var $characterLevelVal = returnInt(_values.character_level.jDom);
-    var $skillPowerVal = returnInt(_values.skill_power.jDom);
-    var $characterAttackVal = returnInt(_values.character_attack.jDom);
-    var $attributeAttackVal = returnInt(_values.attribute_attack.jDom);
-    var $tribeAttackVal = returnInt(_values.tribe_attack.jDom);
-    var $propertyAttackVal = returnInt(_values.property_attack.jDom);
-    var $fixAttackVal = returnInt(_values.fix_attack.jDom);
-    var $phCriticalAttackVal = returnInt(_values.ph_critical_attack.jDom);
-    var $maAmplifyVal = returnInt(_values.ma_amplify.jDom);
+    var $enLevelVal = _values.en_level.jDom;
+    var $enDeffenseVal = _values.en_deffense.jDom;
+    var $characterLevelVal = _values.character_level.jDom;
+    var $skillPowerVal = _values.skill_power.jDom;
+    var $characterAttackVal = _values.character_attack.jDom;
+    var $attributeAttackVal = _values.attribute_attack.jDom;
+    var $tribeAttackVal = _values.tribe_attack.jDom;
+    var $propertyAttackVal = _values.property_attack.jDom;
+    var $fixAttackVal = _values.fix_attack.jDom;
+    var $phCriticalAttackVal = _values.ph_critical_attack.jDom;
+    var $maAmplifyVal = _values.ma_amplify.jDom;
     
     if ( !$enLevelVal.val() ) $enLevelVal.val(1);
     if ( !$enDeffenseVal.val() ) $enDeffenseVal.val(1);
@@ -100,8 +142,8 @@ $(function(){
     if ( !$characterAttackVal.val() ) $characterAttackVal.val(1);
     if ( !$attributeAttackVal.val() ) $attributeAttackVal.val(1);
     if ( !$tribeAttackVal.val() ) $tribeAttackVal.val(1);
-    if ( !$propertyAttackVal.val() ) $propertyAttackVal.val(1);
-    if ( !$fixAttackVal.val() ) $fixAttackVal.val(1);
+    if ( !$propertyAttackVal.val() ) $propertyAttackVal.val(0);
+    if ( !$fixAttackVal.val() ) $fixAttackVal.val(0);
     if ( !$phCriticalAttackVal.val() ) $phCriticalAttackVal.val(1);
     if ( !$maAmplifyVal.val() ) $maAmplifyVal.val(1);
   }
@@ -114,13 +156,24 @@ $(function(){
     _values.tribe_attack.jDom.addClass('js-hide');
     _values.fix_attack.jDom.addClass('js-hide');
   }
-  
+  // インプットを出す
   function showInputRelation() {
     _values.en_level.jDom.removeClass('js-hide');
     _values.en_deffense.jDom.removeClass('js-hide');
     _values.character_level.jDom.removeClass('js-hide');
     _values.tribe_attack.jDom.removeClass('js-hide');
     _values.fix_attack.jDom.removeClass('js-hide');
+  }
+  
+  // 物理用インプット
+  function showInputPh() {
+    $('#phMode').removeClass('js-hide');
+    $('#maMode').addClass('js-hide');
+  }
+  // 魔法用インプット
+  function showInputMa() {
+    $('#phMode').addClass('js-hide');
+    $('#maMode').removeClass('js-hide');
   }
   
   // 計算タイプ判別
@@ -135,6 +188,19 @@ $(function(){
       hiddenInputRelation();
     }
   }
+  
+  // 攻撃タイプ判別
+  function attackType() {
+    var $attackInput = $('#attackType').find('input:checked');
+    var typeValue = $attackInput.val();
+    if ( typeValue === 'ph' ) {
+      _status.attackType = 'ph';
+      showInputPh();
+    } else {
+      _status.attackType = 'ma';
+      showInputMa();
+    }
+  }
 
   // 初期化
   function init() {
@@ -143,11 +209,17 @@ $(function(){
       caluculatorType();
     });
     
+    $('#attackType input').on('click',function() {
+      attackType();
+    });
+    
+    
+    
     $('#calculatorButton').on('click',function() {
       defaultValueSet();
-      damageCalculator();
       
       $('#totalScore').html(damageCalculator());
+      $('#totalCritical').html(damageCalculator(true));
     });
   }
 

@@ -46,12 +46,17 @@ T0?/T1?/防御デバフ/属性抵抗/属性相性/タイプ相性<br>
 レベル補正<br><br>
   
 <div id="">
-  <p id="totalScore">Total Score</p>
+  <p>Total Score : <span id="totalScore"></span></p>
+  <p>Total Critical : <span id="totalCritical"></span></p>
 </div>
   
 <div id="calculatorType">
   <label><input type="radio" name="cal_type" value="easy"> 簡易計算機</label><br>
   <label><input type="radio" name="cal_type" value="detail"> 詳細計算機</label><br>
+</div>
+<div id="attackType">
+  <label><input type="radio" name="attack_type" value="ph"> 物理攻撃</label><br>
+  <label><input type="radio" name="attack_type" value="ma"> 魔法攻撃</label><br>
 </div>
 
 <div id="">
@@ -64,7 +69,7 @@ T0?/T1?/防御デバフ/属性抵抗/属性相性/タイプ相性<br>
   <h2>キャラクター情報</h2>
   <input type="text" id="character_level" class="" placeholder="キャラクターレベル">
   <input type="text" id="skill_power" class="" placeholder="スキル威力">
-  <input type="text" id="character_attack" class="" placeholder="キャラクター攻撃力">
+  <input type="text" id="character_attack" class="" placeholder="キャラクター攻撃力（平均値を入力）">
   <input type="text" id="attribute_attack" class="" placeholder="属性攻撃力">
   <input type="text" id="tribe_attack" class="" placeholder="種族ダメージ">
   <input type="text" id="property_attack" class="" placeholder="特性">
@@ -72,12 +77,12 @@ T0?/T1?/防御デバフ/属性抵抗/属性相性/タイプ相性<br>
 </div>
   
   
-<div id="">
+<div id="phMode">
   <h2>物理職用オプション</h2>
   <input type="text" id="ph_critical_attack" class="" placeholder="クリティカル攻撃力">
 </div>
   
-<div id="">
+<div id="maMode">
   <h2>魔法職用オプション</h2>
   <input type="text" id="ma_amplify" class="" placeholder="魔法増幅">
 </div>
